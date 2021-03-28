@@ -12,9 +12,28 @@ function doGet(e) {
   return handleResponse(e);
 }
 
-function opOpen(e) {
+function onOpen(e) {
   var doc = SpreadsheetApp.getActiveSpreadsheet();
   doc.getSheetByName(doc.getSheets()[0].getName()).setName("Main Sheet");
+
+  //다른날이면 0으로 수정
+  dayReset();
+}
+
+function dayReset() {
+  var doc = SpreadsheetApp.getActiveSpreadsheet();
+  var sheet = doc.getSheetByName(SHEET_NAME);
+
+  var date = new Date();
+  var utc = date.getTime() + date.getTimezoneOffset() * 60 * 1000;
+  var KR_TIME_DIFF = 9 * 60 * 60 * 1000;
+  var krDate = new Date(utc + KR_TIME_DIFF);
+
+  var day = "last load: " + krDate.getFullYear() + "/" + (krDate.getMonth() + 1) + "/" + krDate.getDate();
+  if (sheet.getRange("C4").getValue() != day) {
+    sheet.getRange("C4").setValue(day);
+    sheet.getRange("C3").setValue(0);
+  }
 }
 
 function handleResponse(e) {
@@ -22,6 +41,8 @@ function handleResponse(e) {
   var lock = LockService.getDocumentLock();
   lock.waitLock(30000);
   try {
+    dayReset();
+
     var doc = SpreadsheetApp.openById(SCRIPT_PROP.getProperty("key"));
     var sheet = doc.getSheetByName(SHEET_NAME);
 
@@ -42,12 +63,14 @@ function handleResponse(e) {
     }
     var logSheet = doc.getSheetByName(doc.getSheets()[1].getName());
 
-    var data = new Date();
+    var date = new Date();
     var lastRow = logSheet.getLastRow();
-    logSheet.getRange(lastRow + 1, 1).setValue(data.getFullYear() + "/" + data.getMonth() + "/" + data.getDay() + "/" + data.getHours() + ":" + data.getMinutes() + ":" + data.getSeconds());
+    logSheet.getRange(lastRow + 1, 1).setValue(date.getFullYear() + "/" + (date.getMonth() + 1) + "/" + date.getDate() + "/" + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds());
     logSheet.getRange(lastRow + 1, 2).setValue(e.parameter["IP"]);
 
-    return ContentService.createTextOutput(JSON.stringify({ result: "success", total: totalRange.getValue(), today: todayRange.getValue() })).setMimeType(ContentService.MimeType.JSON);
+    return ContentService.createTextOutput(JSON.stringify({ result: "success", total: totalRange.getValue().toString(), today: todayRange.getValue().toString() })).setMimeType(
+      ContentService.MimeType.JSON
+    );
   } catch (e) {
     Logger.log("Error: " + e);
     return ContentService.createTextOutput(JSON.stringify({ result: "error", msg: e })).setMimeType(ContentService.MimeType.JSON);
@@ -60,8 +83,8 @@ function addSheet() {
   var doc = SpreadsheetApp.getActiveSpreadsheet();
   doc.insertSheet(1);
   var sheet = doc.getSheetByName(doc.getSheets()[1].getName());
-  var data = new Date();
-  sheet.setName("log " + data.getFullYear() + "/" + data.getMonth() + "/" + data.getDay() + "/" + data.getHours() + ":" + data.getMinutes() + ":" + data.getSeconds());
+  var date = new Date();
+  sheet.setName("log " + date.getFullYear() + "/" + (date.getMonth() + 1) + "/" + date.getDate() + "/" + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds());
 
   sheet.getRange("A1").setValue("Date");
   sheet.getRange("B1").setValue("IP");
