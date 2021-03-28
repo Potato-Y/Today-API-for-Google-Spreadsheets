@@ -2,11 +2,6 @@ var SHEET_NAME = "Main Sheet"; //메인 시트 이름
 var SCRIPT_PROP = PropertiesService.getScriptProperties();
 var scriptVer = 1.0; //스크립트 버전
 
-function setup() {
-  var doc = SpreadsheetApp.getActiveSpreadsheet(); //권한 얻기
-  SCRIPT_PROP.setProperty("key", doc.getId());
-}
-
 //오류이슈로 GET 만 사용하도록 설정
 function doGet(e) {
   return handleResponse(e);
@@ -54,7 +49,7 @@ function handleResponse(e) {
   try {
     dayReset();
 
-    var doc = SpreadsheetApp.openById(SCRIPT_PROP.getProperty("key"));
+    var doc = SpreadsheetApp.getActiveSpreadsheet();
     var sheet = doc.getSheetByName(SHEET_NAME);
 
     var totalRange = sheet.getRange("C2");
