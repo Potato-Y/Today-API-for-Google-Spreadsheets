@@ -16,6 +16,17 @@ function onOpen(e) {
   var doc = SpreadsheetApp.getActiveSpreadsheet();
   doc.getSheetByName(doc.getSheets()[0].getName()).setName("Main Sheet");
 
+  //첫 실행시 새로운 프로젝트라면 설정
+  var sheet = doc.getSheetByName(SHEET_NAME);
+  if (sheet.getRange("B4").getValue() == "") {
+    sheet.getRange("B2").setValue("Total User");
+    sheet.getRange("B3").setValue("Today User");
+    sheet.getRange("C2").setValue(0);
+    sheet.getRange("C3").setValue(0);
+    sheet.getRange("Y1").setValue("Script Version");
+    sheet.getRange("Z1").setValue(scriptVer);
+  }
+
   //다른날이면 0으로 수정
   dayReset();
 }
