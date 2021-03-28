@@ -3,10 +3,10 @@
 > 본 스크립트를 사용하는 방법에 대해서는 [wiki](https://github.com/Potato-Y/Today-API-for-Google-Spreadsheets/wiki)를 확인하세요.<br>
 > Check out [wiki](https://github.com/Potato-Y/Today-API-for-Google-Spreadsheets/wiki) on how to use this script.
 
-| 목차                                                    |
-| ------------------------------------------------------- |
-| 1. [Brief description](#Brief%20description)            |
-| 1. [간단설명](#%EA%B0%84%EB%8B%A8%20%EC%84%A4%EB%AA%85) |
+| 목차                                       |
+| ------------------------------------------ |
+| 1. [Brief description](#brief-description) |
+| 1. [간단설명](#간단-설명)                  |
 
 ## Brief description
 
