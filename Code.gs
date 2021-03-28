@@ -13,7 +13,7 @@ function onOpen(e) {
 
   //첫 실행시 새로운 프로젝트라면 설정
   var sheet = doc.getSheetByName(SHEET_NAME);
-  if (sheet.getRange("B4").getValue() == "") {
+  if (sheet.getRange("Z1").getValue() == "") {
     sheet.getRange("B2").setValue("Total User");
     sheet.getRange("B3").setValue("Today User");
     sheet.getRange("C2").setValue(0);
